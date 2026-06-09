@@ -1,0 +1,27 @@
+init: build up composer-install ## Build containers, start and install dependencies
+
+build: ## Build containers
+	docker compose build --no-cache
+
+up: ## Start containers in detached mode
+	docker compose up -d
+
+down: ## Stop and remove containers
+	docker compose down
+
+logs: ## Show logs in real time
+	docker compose logs -f
+
+restart: down up ## Restart containers
+
+php: ## Open bash in php container
+	docker compose exec php bash
+
+composer-install: ## Install composer dependencies
+	docker compose --profile tools run --rm composer install --no-progress
+
+composer-require: ## Add a package: make composer-require package=vendor/name
+	docker compose --profile tools run --rm composer require $(package)
+
+composer-update: ## Update composer dependencies
+	docker compose --profile tools run --rm composer update --no-progress
