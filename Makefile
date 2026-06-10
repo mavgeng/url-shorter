@@ -1,4 +1,4 @@
-init: build up composer-install migrate ## Build containers, start, install dependencies and run migrations
+init: build up composer-install migrate test-setup ## Build containers, start, install dependencies and run migrations
 
 build: ## Build containers
 	docker compose build --no-cache
@@ -28,3 +28,9 @@ composer-update: ## Update composer dependencies
 
 migrate: ## Run database migrations
 	docker compose exec php bin/console doctrine:migrations:migrate --no-interaction
+
+test:
+	docker compose exec php bin/phpunit --testdox
+
+test-setup:
+	docker compose exec php bin/console doctrine:schema:create --env=test
