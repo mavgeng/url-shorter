@@ -20,7 +20,7 @@ class Url
 {
     #[ORM\Id]
     #[ORM\Column(type: UlidType::NAME, unique: true)]
-    private ?Ulid $id = null;
+    private ?Ulid $id;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message: 'URL cannot be blank')]

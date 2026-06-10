@@ -1,4 +1,4 @@
-init: build up composer-install ## Build containers, start and install dependencies
+init: build up composer-install migrate ## Build containers, start, install dependencies and run migrations
 
 build: ## Build containers
 	docker compose build --no-cache
@@ -25,3 +25,6 @@ composer-require: ## Add a package: make composer-require package=vendor/name
 
 composer-update: ## Update composer dependencies
 	docker compose --profile tools run --rm composer update --no-progress
+
+migrate: ## Run database migrations
+	docker compose exec php bin/console doctrine:migrations:migrate --no-interaction

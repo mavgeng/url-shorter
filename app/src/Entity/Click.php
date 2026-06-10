@@ -32,11 +32,18 @@ class Click
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $referer = null;
 
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $device = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $browser = null;
+
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
     public function __construct(Url $url)
     {
+        $this->id = new Ulid();
         $this->url = $url;
         $this->createdAt = new \DateTimeImmutable();
     }
@@ -88,6 +95,30 @@ class Click
     public function setReferer(?string $referer): self
     {
         $this->referer = $referer;
+
+        return $this;
+    }
+
+    public function getDevice(): ?string
+    {
+        return $this->device;
+    }
+
+    public function setDevice(?string $device): self
+    {
+        $this->device = $device;
+
+        return $this;
+    }
+
+    public function getBrowser(): ?string
+    {
+        return $this->browser;
+    }
+
+    public function setBrowser(?string $browser): self
+    {
+        $this->browser = $browser;
 
         return $this;
     }

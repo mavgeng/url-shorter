@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Link expired{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+                <div class="card shadow-sm">
+                    <div class="card-body p-5">
+                        <h1 class="h3 fw-bold text-danger mb-3">Link expired</h1>
+                        <p class="text-muted mb-4">
+                            This short link has reached its expiration date
+                            and is no longer active.
+                        </p>
+                        <a href="{{ path('home') }}" class="btn btn-primary">
+                            Create a new link
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

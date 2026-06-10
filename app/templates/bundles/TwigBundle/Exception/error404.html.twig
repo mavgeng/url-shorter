@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page Not Found{% endblock %}
+
+{% block body %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="text-center">
+        <h1 class="display-1 fw-bold text-secondary">404</h1>
+        <p class="fs-4 fw-semibold mb-2">Page not found</p>
+        <p class="text-muted mb-4">The link you followed may be broken or the page may have been removed.</p>
+        <a href="{{ path('home') }}" class="btn btn-primary">Back to home</a>
+    </div>
+</div>
+{% endblock %}
