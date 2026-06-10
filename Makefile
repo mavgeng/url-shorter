@@ -1,4 +1,4 @@
-init: build up composer-install migrate test-setup ## Build containers, start, install dependencies and run migrations
+init: build up composer-install migrate ## Build containers, start, install dependencies and run migrations
 
 build: ## Build containers
 	docker compose build --no-cache
@@ -33,6 +33,7 @@ test:
 	docker compose exec php bin/phpunit --testdox
 
 test-setup:
+	docker compose exec mysql mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS app_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; GRANT ALL PRIVILEGES ON app_test.* TO 'app'@'%'; FLUSH PRIVILEGES;"
 	docker compose exec php bin/console doctrine:schema:create --env=test
 
 php-cs-fixer:
