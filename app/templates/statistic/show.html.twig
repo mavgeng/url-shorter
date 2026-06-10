@@ -1,0 +1,193 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistics{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-7">
+
+                <div class="text-center mb-4">
+                    <h1 class="h3 fw-bold">Link statistics</h1>
+                </div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <label class="form-label text-muted small mb-1">Short link</label>
+                        <div class="input-group mb-3">
+                            <input
+                                type="text"
+                                class="form-control"
+                                value="{{ url('url_redirect', { code: url.shortCode }) }}"
+                                readonly>
+                        </div>
+
+                        <label class="form-label text-muted small mb-1">Original URL</label>
+                        <div class="text-break">
+                            <a href="{{ url.original }}" target="_blank" rel="noopener">
+                                {{ url.original }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="card shadow-sm text-center h-100">
+                            <div class="card-body p-4">
+                                <div class="display-4 fw-bold">{{ totalCount }}</div>
+                                <div class="text-muted text-uppercase small mt-2">Total clicks</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card shadow-sm text-center h-100">
+                            <div class="card-body p-4">
+                                <div class="display-4 fw-bold">{{ uniqueCount }}</div>
+                                <div class="text-muted text-uppercase small mt-2">Unique clicks</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if clicksByDay is not empty %}
+                <div class="card shadow-sm mt-3">
+                    <div class="card-body p-4">
+                        <h6 class="text-muted text-uppercase small mb-3">Clicks by day</h6>
+                        <canvas id="clicksChart" height="120"></canvas>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if clicksByReferer is not empty %}
+                <div class="card shadow-sm mt-3">
+                    <div class="card-body p-4">
+                        <h6 class="text-muted text-uppercase small mb-3">Referrers</h6>
+                        <canvas id="referrerChart"></canvas>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if clicksByBrowser is not empty or clicksByDevice is not empty %}
+                <div class="row g-3 mt-0">
+                    {% if clicksByBrowser is not empty %}
+                    <div class="col-{{ clicksByDevice is not empty ? '6' : '12' }}">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body p-4">
+                                <h6 class="text-muted text-uppercase small mb-3">Browsers</h6>
+                                <canvas id="browserChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if clicksByDevice is not empty %}
+                    <div class="col-{{ clicksByBrowser is not empty ? '6' : '12' }}">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body p-4">
+                                <h6 class="text-muted text-uppercase small mb-3">Devices</h6>
+                                <canvas id="deviceChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <div class="text-center mt-4">
+                    <a href="{{ path('home') }}" class="btn btn-primary">
+                        Shorten another
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{% if clicksByDay is not empty or clicksByReferer is not empty or clicksByBrowser is not empty or clicksByDevice is not empty %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script>
+    const chartDefaults = {
+        backgroundColor: 'rgba(13, 110, 253, 0.15)',
+        borderColor: 'rgba(13, 110, 253, 0.8)',
+        borderWidth: 1,
+        borderRadius: 4,
+    };
+
+    {% if clicksByDay is not empty %}
+    new Chart(document.getElementById('clicksChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ clicksByDay|map(r => r.day)|json_encode|raw }},
+            datasets: [{ label: 'Clicks', data: {{ clicksByDay|map(r => r.count)|json_encode|raw }}, ...chartDefaults }]
+        },
+        options: {
+            plugins: {legend: {display: false}},
+            scales: {y: {beginAtZero: true, ticks: {stepSize: 1, precision: 0}}}
+        }
+    });
+    {% endif %}
+
+    {% if clicksByReferer is not empty %}
+    new Chart(document.getElementById('referrerChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ clicksByReferer|map(r => r.referer)|json_encode|raw }},
+            datasets: [{ label: 'Clicks', data: {{ clicksByReferer|map(r => r.count)|json_encode|raw }}, ...chartDefaults }]
+        },
+        options: {
+            indexAxis: 'y',
+            plugins: {legend: {display: false}},
+            scales: {x: {beginAtZero: true, ticks: {stepSize: 1, precision: 0}}}
+        }
+    });
+    {% endif %}
+
+    {% if clicksByBrowser is not empty %}
+    new Chart(document.getElementById('browserChart'), {
+        type: 'doughnut',
+        data: {
+            labels: {{ clicksByBrowser|map(r => r.browser)|json_encode|raw }},
+            datasets: [{
+                data: {{ clicksByBrowser|map(r => r.count)|json_encode|raw }},
+                backgroundColor: [
+                    'rgba(13, 110, 253, 0.7)',
+                    'rgba(25, 135, 84, 0.7)',
+                    'rgba(255, 193, 7, 0.7)',
+                    'rgba(220, 53, 69, 0.7)',
+                    'rgba(111, 66, 193, 0.7)',
+                ],
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            plugins: {legend: {position: 'bottom'}},
+        }
+    });
+    {% endif %}
+
+    {% if clicksByDevice is not empty %}
+    new Chart(document.getElementById('deviceChart'), {
+        type: 'doughnut',
+        data: {
+            labels: {{ clicksByDevice|map(r => r.device)|json_encode|raw }},
+            datasets: [{
+                data: {{ clicksByDevice|map(r => r.count)|json_encode|raw }},
+                backgroundColor: [
+                    'rgba(13, 110, 253, 0.7)',
+                    'rgba(25, 135, 84, 0.7)',
+                    'rgba(255, 193, 7, 0.7)',
+                    'rgba(220, 53, 69, 0.7)',
+                ],
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            plugins: {legend: {position: 'bottom'}},
+        }
+    });
+    {% endif %}
+</script>
+{% endif %}
+{% endblock %}
