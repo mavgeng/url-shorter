@@ -21,7 +21,8 @@ class UrlController extends AbstractController
         private readonly CodeGenerator $codeGenerator,
         private readonly ClickRepository $clickRepository,
         private readonly UrlRepository $urlRepository,
-    ) {}
+    ) {
+    }
 
     #[Route('/', name: 'home', methods: ['GET'])]
     public function index(): Response
@@ -41,7 +42,7 @@ class UrlController extends AbstractController
         $errors = $validator->validate($dto);
         if (count($errors) > 0) {
             return $this->render('url/store.html.twig', [
-                'error'   => $errors->get(0)->getMessage(),
+                'error' => $errors->get(0)->getMessage(),
                 'old_url' => $dto->url,
                 'old_ttl' => $dto->ttl,
             ]);
@@ -67,8 +68,8 @@ class UrlController extends AbstractController
     ): Response {
         $url = $this->urlRepository->findByShortCode($code);
 
-        if ($url === null) {
-            throw $this->createNotFoundException('Link not found for code ' . $code);
+        if (null === $url) {
+            throw $this->createNotFoundException('Link not found for code '.$code);
         }
 
         if ($url->isExpired()) {

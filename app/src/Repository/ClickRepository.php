@@ -55,7 +55,7 @@ class ClickRepository extends ServiceEntityRepository
         );
 
         return array_map(
-            static fn(array $row) => ['day' => $row['day'], 'count' => (int) $row['count']],
+            static fn (array $row) => ['day' => $row['day'], 'count' => (int) $row['count']],
             $rows,
         );
     }
@@ -87,7 +87,7 @@ class ClickRepository extends ServiceEntityRepository
         );
 
         return array_map(
-            static fn(array $row) => [$column => $row['value'] ?: $nullLabel, 'count' => (int) $row['count']],
+            static fn (array $row) => [$column => $row['value'] ?: $nullLabel, 'count' => (int) $row['count']],
             $rows,
         );
     }

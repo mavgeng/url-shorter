@@ -13,14 +13,15 @@ class CodeGenerator
 
     public function __construct(
         private readonly UrlRepository $urlRepository,
-    ) {}
+    ) {
+    }
 
     public function generate(): string
     {
-        for ($i = 0; $i < self::MAX_ATTEMPTS; $i++) {
+        for ($i = 0; $i < self::MAX_ATTEMPTS; ++$i) {
             $code = ByteString::fromRandom(self::LENGTH, self::ALPHABET)->toString();
 
-            if ($this->urlRepository->findByShortCode($code) === null) {
+            if (null === $this->urlRepository->findByShortCode($code)) {
                 return $code;
             }
         }

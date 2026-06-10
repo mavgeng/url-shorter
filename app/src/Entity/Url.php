@@ -106,6 +106,6 @@ class Url
 
     public function isExpired(): bool
     {
-        return $this->expiresAt !== null && $this->expiresAt < new \DateTimeImmutable();
+        return null !== $this->expiresAt && $this->expiresAt < new \DateTimeImmutable();
     }
 }

@@ -13,15 +13,16 @@ class StatisticController extends AbstractController
     public function __construct(
         private readonly ClickRepository $clickRepository,
         private readonly UrlRepository $urlRepository,
-    ) {}
+    ) {
+    }
 
     #[Route('/statistic/{code}', name: 'statistic_show', methods: ['GET'])]
     public function show(string $code): Response
     {
         $url = $this->urlRepository->findByShortCode($code);
 
-        if ($url === null) {
-            throw $this->createNotFoundException('Link not found by short code ' . $code);
+        if (null === $url) {
+            throw $this->createNotFoundException('Link not found by short code '.$code);
         }
 
         return $this->render('statistic/show.html.twig', [

@@ -74,7 +74,7 @@ class UrlControllerTest extends WebTestCase
     {
         $url = $this->createUrl('https://example.com');
 
-        $this->client->request('GET', '/' . $url->getShortCode());
+        $this->client->request('GET', '/'.$url->getShortCode());
 
         $this->assertResponseRedirects('https://example.com', Response::HTTP_FOUND);
     }
@@ -83,7 +83,7 @@ class UrlControllerTest extends WebTestCase
     {
         $url = $this->createUrl('https://example.com');
 
-        $this->client->request('GET', '/' . $url->getShortCode(), server: [
+        $this->client->request('GET', '/'.$url->getShortCode(), server: [
             'HTTP_USER_AGENT' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36',
             'HTTP_REFERER' => 'https://referrer.com',
         ]);
@@ -110,7 +110,7 @@ class UrlControllerTest extends WebTestCase
     {
         $url = $this->createUrl('https://example.com', expiresAt: new \DateTimeImmutable('-1 day'));
 
-        $this->client->request('GET', '/' . $url->getShortCode());
+        $this->client->request('GET', '/'.$url->getShortCode());
 
         $this->assertResponseStatusCodeSame(Response::HTTP_GONE);
     }
@@ -119,7 +119,7 @@ class UrlControllerTest extends WebTestCase
     {
         $url = $this->createUrl('https://example.com', expiresAt: new \DateTimeImmutable('-1 day'));
 
-        $this->client->request('GET', '/' . $url->getShortCode());
+        $this->client->request('GET', '/'.$url->getShortCode());
 
         $clicks = $this->entityManager->getRepository(Click::class)->findBy(['url' => $url]);
         $this->assertCount(0, $clicks);
@@ -131,7 +131,7 @@ class UrlControllerTest extends WebTestCase
         $url->setOriginal($original);
         $url->setShortCode($this->generateUniqueCode());
 
-        if ($expiresAt !== null) {
+        if (null !== $expiresAt) {
             $url->setExpiresAt($expiresAt);
         }
 

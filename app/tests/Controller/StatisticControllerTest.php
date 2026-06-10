@@ -29,7 +29,7 @@ class StatisticControllerTest extends WebTestCase
     {
         $url = $this->createUrl('https://example.com');
 
-        $this->client->request('GET', '/statistic/' . $url->getShortCode());
+        $this->client->request('GET', '/statistic/'.$url->getShortCode());
 
         $this->assertResponseIsSuccessful();
     }
@@ -45,20 +45,20 @@ class StatisticControllerTest extends WebTestCase
     {
         $url = $this->createUrl('https://example.com');
 
-        $this->client->request('GET', '/statistic/' . $url->getShortCode());
+        $this->client->request('GET', '/statistic/'.$url->getShortCode());
 
         $this->assertSelectorTextContains('body', 'https://example.com');
 
-        $this->assertSelectorExists('input[value*="/' . $url->getShortCode() . '"]');
+        $this->assertSelectorExists('input[value*="/'.$url->getShortCode().'"]');
     }
 
     public function testShowDisplaysZeroCountsWithNoClicks(): void
     {
         $url = $this->createUrl('https://example.com');
 
-        $crawler = $this->client->request('GET', '/statistic/' . $url->getShortCode());
+        $crawler = $this->client->request('GET', '/statistic/'.$url->getShortCode());
 
-        $counts = $crawler->filter('.display-4')->each(fn($node) => (int) $node->text());
+        $counts = $crawler->filter('.display-4')->each(fn ($node) => (int) $node->text());
         $this->assertSame([0, 0], $counts);
     }
 
@@ -69,7 +69,7 @@ class StatisticControllerTest extends WebTestCase
         $this->createClick($url, ip: '2.2.2.2');
         $this->createClick($url, ip: '2.2.2.2');
 
-        $crawler = $this->client->request('GET', '/statistic/' . $url->getShortCode());
+        $crawler = $this->client->request('GET', '/statistic/'.$url->getShortCode());
 
         $total = (int) $crawler->filter('.display-4')->first()->text();
         $this->assertSame(3, $total);
@@ -82,7 +82,7 @@ class StatisticControllerTest extends WebTestCase
         $this->createClick($url, ip: '2.2.2.2');
         $this->createClick($url, ip: '2.2.2.2');
 
-        $crawler = $this->client->request('GET', '/statistic/' . $url->getShortCode());
+        $crawler = $this->client->request('GET', '/statistic/'.$url->getShortCode());
 
         $unique = (int) $crawler->filter('.display-4')->eq(1)->text();
         $this->assertSame(2, $unique);
@@ -93,7 +93,7 @@ class StatisticControllerTest extends WebTestCase
         $url = $this->createUrl('https://example.com');
         $this->createClick($url);
 
-        $this->client->request('GET', '/statistic/' . $url->getShortCode());
+        $this->client->request('GET', '/statistic/'.$url->getShortCode());
 
         $this->assertSelectorExists('#clicksChart');
     }
@@ -102,7 +102,7 @@ class StatisticControllerTest extends WebTestCase
     {
         $url = $this->createUrl('https://example.com');
 
-        $this->client->request('GET', '/statistic/' . $url->getShortCode());
+        $this->client->request('GET', '/statistic/'.$url->getShortCode());
 
         $this->assertSelectorNotExists('#clicksChart');
     }
@@ -113,7 +113,7 @@ class StatisticControllerTest extends WebTestCase
         $url->setOriginal($original);
         $url->setShortCode(substr(str_shuffle('abcdefghijklmnopqrstuvwxyz0123456789'), 0, 6));
 
-        if ($expiresAt !== null) {
+        if (null !== $expiresAt) {
             $url->setExpiresAt($expiresAt);
         }
 

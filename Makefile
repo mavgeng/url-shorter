@@ -34,3 +34,6 @@ test:
 
 test-setup:
 	docker compose exec php bin/console doctrine:schema:create --env=test
+
+php-cs-fixer:
+	docker compose exec php vendor/bin/php-cs-fixer fix
