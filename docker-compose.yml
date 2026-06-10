@@ -18,7 +18,7 @@ services:
   nginx:
     image: nginx:alpine
     ports:
-      - "8080:80"
+      - "8000:80"
     volumes:
       - ./app:/var/www
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
@@ -45,6 +45,18 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    depends_on:
+      - mysql
+    env_file:
+      - docker/env/phpmyadmin.env
+    ports:
+      - "8080:80"
+    networks:
+      - app-network
 
   composer:
     container_name: composer
