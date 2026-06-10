@@ -121,3 +121,19 @@ make test-setup
 # Запустити всі тести
 make test
 ```
+
+---
+
+## Якість коду
+
+Для форматування коду використовується **PHP CS Fixer 3** із набором правил `@Symfony`.
+
+```bash
+# Виправити стиль автоматично
+make php-cs-fixer
+
+# Тільки перевірити без змін (для CI)
+docker compose exec php vendor/bin/php-cs-fixer fix --dry-run --diff
+```
+
+Конфігурація знаходиться у файлі `.php-cs-fixer.dist.php`.
